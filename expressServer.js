@@ -1,6 +1,6 @@
-const express = require('express');
-const app = express(); //dependancy
-const PORT = 8080; //default port 8080
+const express = require('express');//dependancy
+const app = express();
+const PORT = 8080;//default port 8080
 
 app.set("view engine", "ejs");
 
