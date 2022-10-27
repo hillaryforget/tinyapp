@@ -1,8 +1,8 @@
 const express = require('express');//dependancy
-const app = express();
+const app = express();//create server
 const PORT = 8080;//default port 8080
 
-app.set("view engine", "ejs");
+app.set("view engine", "ejs");//set view engine
 
 const urlDatabase = {
   'b2xVn2': 'http://www.lighthouselabs.ca',
@@ -20,6 +20,11 @@ app.listen(PORT, () => {
 //add routes
 app.get('/urls.json', (req, res) => {
   res.json(urlDatabase);
+});
+
+app.get("/urls", (req, res) => {
+  const templateVars = { urls: urlDatabase };
+  res.render("urlsIndex", templateVars);
 });
 
 app.get('/hello', (req, res) => {
