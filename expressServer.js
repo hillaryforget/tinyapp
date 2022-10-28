@@ -18,6 +18,8 @@ app.listen(PORT, () => {
 });
 
 //add routes
+app.use(express.urlencoded({ extended: true }));//the body-parser library will convert the request body from a Buffer into string that we can read
+
 app.get('/urls.json', (req, res) => {
   res.json(urlDatabase);
 });
