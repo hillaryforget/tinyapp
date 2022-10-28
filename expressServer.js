@@ -9,6 +9,12 @@ const urlDatabase = {
   '9sm5xK': 'http://www.google.com'
 };
 
+//will create a 6 char id for short url
+const generateRandomString = () => {
+  const characters = '1234567890abcdefghijklmnopqrstuvwxyz'
+  const charsLength = characters.length;
+  let output = '';
+
 app.post("/urls", (req, res) => {
   console.log(req.body); //log the POST request body to the console
   res.send("Ok"); //respond with 'Ok' (we will replace this)
