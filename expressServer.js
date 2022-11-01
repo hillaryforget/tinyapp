@@ -25,8 +25,8 @@ app.use(express.urlencoded({ extended: true }));//the body-parser library will c
 //add routes
 app.post('/urls', (req, res) => {
   let id = generateRandomString();
-  urlDatabase[id] = req.body.longURL;//!!!req.body is the object created when a user submits the form
-  res.redirect(`/urls/${id}`); //!!!redirects to urls/:id and adds id to the path in its GET request
+  urlDatabase[id] = req.body.longURL;
+  res.redirect(`/urls/${id}`);
 });
 
 app.get('/u/:id', (req, res) => {
