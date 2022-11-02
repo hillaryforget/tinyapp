@@ -20,7 +20,7 @@ const generateRandomString = () => {
   return output;
 };
 
-app.use(express.urlencoded({ extended: true }));//the body-parser library will convert the request body from a Buffer into string that we can read
+app.use(express.urlencoded({ extended: true }));//the body-parser library converts the request body from a buffer into readable string
 
 //add routes
 app.post('/urls', (req, res) => {
@@ -63,6 +63,11 @@ app.get('/urls/new', (req, res) => {
 app.get('/urls/:id', (req, res) => {
   const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id] };
   res.render('urlsShow', templateVars);
+});
+
+app.post('/urls/:id/delete', (req, res) => { // This POST request comes in when the user hits "Delete" on the /urls page
+  delete urlDatabase[req.params.id]; // The request carries in "id: ?????" and deletes it from our database
+  res.redirect('/urls'); // Finally they get redirected to the /urls main page
 });
 
 //
