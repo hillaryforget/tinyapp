@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: true }));//the body-parser library conver
 app.post('/urls', (req, res) => {
   let id = generateRandomString();
   urlDatabase[id] = req.body.longURL;
-  res.redirect(`/urls/${id}`);
+  res.redirect(`/urls`);
 });
 
 app.get('/u/:id', (req, res) => {
@@ -65,9 +65,15 @@ app.get('/urls/:id', (req, res) => {
   res.render('urlsShow', templateVars);
 });
 
-app.post('/urls/:id/delete', (req, res) => { // This POST request comes in when the user hits "Delete" on the /urls page
-  delete urlDatabase[req.params.id]; // The request carries in "id: ?????" and deletes it from our database
-  res.redirect('/urls'); // Finally they get redirected to the /urls main page
+app.post("/urls/:id/update", (req, res) => {
+  urlDatabase[req.params.id] = req.body.longURL;
+  res.redirect('/urls');
 });
 
-//
+app.post("/urls/:id/delete", (req, res) => {
+  delete urlDatabase[req.params.id];
+  return res.redirect('/urls');
+});
+
+
+

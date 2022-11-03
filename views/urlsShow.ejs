@@ -13,7 +13,7 @@
 
   <body>
     <%- include('partials/_header') %>
-    
+    <!-- Edit URL page -->
     <div class="card text-center">
       <div class="card-header"></div>
       <div class="card-body">
@@ -21,9 +21,29 @@
         <p class="card-text">
           Short URL ID: <a href="/u/<%= id %>"><%= id %></a>
         </p>
+        <!-- here -->
       </div>
-      <div class="card-footer text-muted"></div>
     </div>
+    <div class="card text-center">
+      <div class="card-header"></div>
+      <div class="card-body">
+        <h5 class="card-title">Update URL</h5>
+        <form class="form-inline" action="/urls/<%= id %>/update" method="POST">
+          <div class="col-sm-12">
+            <label for="longURL">Enter a new URL:</label>
+            <input
+              class="form-control"
+              type="text"
+              name="longURL"
+              placeholder="http://"
+              style="width: 300px; margin: 1em"
+            />
+            <button type="submit" class="btn btn-secondary">Update link</button>
+          </div>
+        </form>
+      </div>
+      </div>
+        <!-- here -->
     <!-- Bootstrap JS -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
