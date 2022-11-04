@@ -1,8 +1,11 @@
+const { name } = require('ejs');
 const express = require('express');//dependancy
+const cookies = require('cookie-parser');
 const app = express();//create server
 const PORT = 8080;//default port 8080
 
 app.set('view engine', 'ejs');//set view engine
+app.use(cookies());
 
 const urlDatabase = {
   'b2xVn2': 'http://www.lighthouselabs.ca',
@@ -73,6 +76,12 @@ app.post("/urls/:id/update", (req, res) => {
 app.post("/urls/:id/delete", (req, res) => {
   delete urlDatabase[req.params.id];
   return res.redirect('/urls');
+});
+
+//cookie
+app.post("/login", (req, res) => {
+  res.cookie();
+  res.redirect(`/urls`);
 });
 
 
