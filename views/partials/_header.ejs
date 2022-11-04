@@ -19,7 +19,9 @@
       </div>
       <!-- here... add username button to nav -->
       <form method="POST" action="/login">
-        <button name="username" type="submit" class="btn btn-sm btn-outline-light ml-md-3" >Username</button>
+        <input name="username" type="text" placeholder="username"/>
+        <%= username %>
+        <button type="submit" class="btn btn-sm btn-outline-light ml-md-3" >Login</button>
       </form>
       <!-- here -->
     </div>
