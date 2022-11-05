@@ -12,6 +12,7 @@ app.use(cookies());
 const urlDatabase = {
   'b2xVn2': 'http://www.lighthouselabs.ca',
   '9sm5xK': 'http://www.google.com'
+
 };
 
 //will create a 6 char id for short url
@@ -93,6 +94,14 @@ app.post("/login", (req, res) => {
 app.post("/logout", (req, res) => {
   res.clearCookie('username');
   return res.redirect('/urls');
+});
+
+//register
+app.get('/register', (req, res) => {
+  const templateVars = {
+    username: req.cookies["username"],
+  };
+  res.render('registerShow', templateVars);
 });
 
 
