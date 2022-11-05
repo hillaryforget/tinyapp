@@ -1,8 +1,13 @@
-const express = require('express');//dependancy
+const { name } = require('ejs');
+const express = require('express');
+const morgan = require("morgan");
+const cookies = require('cookie-parser');
 const app = express();//create server
 const PORT = 8080;//default port 8080
 
 app.set('view engine', 'ejs');//set view engine
+app.use(morgan('dev'));
+app.use(cookies());
 
 const urlDatabase = {
   'b2xVn2': 'http://www.lighthouselabs.ca',
@@ -48,7 +53,7 @@ app.get('/urls.json', (req, res) => {
 });
 
 app.get('/urls', (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
   res.render('urlsIndex', templateVars);
 });
 
@@ -57,11 +62,14 @@ app.get('/hello', (req, res) => {
 });
 
 app.get('/urls/new', (req, res) => {
-  res.render('urlsNew');
+  const templateVars = {
+    username: req.cookies["username"],
+  };
+  res.render('urlsNew', templateVars);
 });
 
 app.get('/urls/:id', (req, res) => {
-  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id] };
+  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id], username: req.cookies["username"] };
   res.render('urlsShow', templateVars);
 });
 
@@ -75,5 +83,16 @@ app.post("/urls/:id/delete", (req, res) => {
   return res.redirect('/urls');
 });
 
+//cookie
+app.post("/login", (req, res) => {
+  res.cookie("username", req.body.username);
+  res.redirect('/urls');
+});
+
+//clear cookie and return to main page
+app.post("/logout", (req, res) => {
+  res.clearCookie('username');
+  return res.redirect('/urls');
+});
 
 
