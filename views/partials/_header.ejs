@@ -17,13 +17,24 @@
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
-      <!-- here... add username button to nav -->
-      <form method="POST" action="/login">
-        <input name="username" type="text" placeholder="username"/>
-        <%= username %>
-        <button type="submit" class="btn btn-sm btn-outline-light ml-md-3" >Login</button>
-      </form>
-      <!-- here -->
+      <!-- checks for username -->
+      <% if(username){ %>
+        <span class="navbar-brand" style="font-size:14px;margin-left:auto;">
+          <%= username %>
+        </span>
+        <form method="POST" action="/logout">
+          <button class="btn btn-sm btn-outline-light" type="submit">Logout</button>
+        </form>
+        <% } else{ %>  
+          <!-- add username button and input to nav -->
+          <form method="POST" action="/login" style="margin-left:auto;">
+            <input name="username" type="text" placeholder="username"/>
+            <!-- display the passed-in username -->
+              <button type="submit" class="btn btn-sm btn-outline-light ml-md-3" >Login</button>
+            </form>
+            <% } %>
     </div>
   </nav>
 </header>
+
+

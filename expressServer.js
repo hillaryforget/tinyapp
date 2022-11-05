@@ -85,10 +85,14 @@ app.post("/urls/:id/delete", (req, res) => {
 
 //cookie
 app.post("/login", (req, res) => {
-  console.log(req.body);
   res.cookie("username", req.body.username);
-  res.redirect(`/urls`);
+  res.redirect('/urls');
 });
 
+//clear cookie and return to main page
+app.post("/logout", (req, res) => {
+  res.clearCookie('username');
+  return res.redirect('/urls');
+});
 
 
