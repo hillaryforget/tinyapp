@@ -12,7 +12,6 @@ app.use(cookies());
 const urlDatabase = {
   'b2xVn2': 'http://www.lighthouselabs.ca',
   '9sm5xK': 'http://www.google.com'
-
 };
 
 //will create a 6 char id for short url
@@ -24,6 +23,20 @@ const generateRandomString = () => {
     output += characters.charAt(Math.floor(Math.random() * charsLength));
   }
   return output;
+};
+
+//global object used to store and access the users in the app
+const users = {
+  userRandomID: {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur",
+  },
+  user2RandomID: {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk",
+  },
 };
 
 app.use(express.urlencoded({ extended: true }));//the body-parser library converts the request body from a buffer into readable string
@@ -102,6 +115,18 @@ app.get('/register', (req, res) => {
     username: req.cookies["username"],
   };
   res.render('registerShow', templateVars);
+});
+
+app.post("/register", (req, res) => {
+  let id = generateRandomString();
+  users[id] = {
+    id,
+    email: req.body.email,
+    password: req.body.password
+  };
+  res.cookie("user_id", id);
+  console.log(users);
+  res.redirect(`/urls`);
 });
 
 
