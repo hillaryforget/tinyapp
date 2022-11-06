@@ -92,6 +92,18 @@ app.get('/urls/:id', (req, res) => {
   res.render('urlsShow', templateVars);
 });
 
+//here
+app.get("/login", (req, res) => {
+  const userID = req.session && req.session.user_id;
+  const templateVars = {
+    user: users[userID] || null,
+  };
+  if (userID) {
+    res.redirect('/urls');
+  }
+  res.render("urlsLogin", templateVars);
+});
+
 app.post("/urls/:id/update", (req, res) => {
   urlDatabase[req.params.id] = req.body.longURL;
   res.redirect('/urls');
@@ -152,5 +164,3 @@ app.post("/register", (req, res) => {
   console.log(users);
   res.redirect(`/urls`);
 });
-
-

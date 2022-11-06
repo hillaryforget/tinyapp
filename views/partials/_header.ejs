@@ -18,21 +18,8 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
       <!-- checks for user -->
-      <% if(user?.email){ %>
-        <span class="navbar-brand" style="font-size:14px;margin-left:auto;">
-          <%= user?.email %>
-        </span>
-        <form method="POST" action="/logout">
-          <button class="btn btn-sm btn-outline-light" type="submit">Logout</button>
-        </form>
-        <% } else{ %>  
-          <!-- add email input and login button to nav -->
-          <form method="POST" action="/login" style="margin-left:auto;">
-            <input name="email" type="text" placeholder="email"/>
-            <!-- display the passed-in email -->
-              <button type="submit" class="btn btn-sm btn-outline-light ml-md-3" >Login</button>
-            </form>
-            <% } %>
+      <a class="btn btn-sm btn-outline-light ml-md-auto" href="/login">Login</a>
+      <a class="btn btn-sm btn-outline-light ml-md-3" href="/register">Register</a>
     </div>
   </nav>
 </header>
