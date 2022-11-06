@@ -39,7 +39,8 @@ const users = {
   },
 };
 
-app.use(express.urlencoded({ extended: true }));//the body-parser library converts the request body from a buffer into readable string
+//the body-parser library converts the request body from a buffer into readable string
+app.use(express.urlencoded({ extended: true }));
 
 //add routes
 app.post('/urls', (req, res) => {
@@ -67,7 +68,7 @@ app.get('/urls.json', (req, res) => {
 });
 
 app.get('/urls', (req, res) => {
-  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+  const templateVars = { urls: urlDatabase, user: users[req.cookies["user_id"]]};
   res.render('urlsIndex', templateVars);
 });
 
@@ -76,14 +77,12 @@ app.get('/hello', (req, res) => {
 });
 
 app.get('/urls/new', (req, res) => {
-  const templateVars = {
-    username: req.cookies["username"],
-  };
+  const templateVars = { user: users[req.cookies["user_id"]]};
   res.render('urlsNew', templateVars);
 });
 
 app.get('/urls/:id', (req, res) => {
-  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id], username: req.cookies["username"] };
+  const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id], user: users[req.cookies["user_id"]]};
   res.render('urlsShow', templateVars);
 });
 
@@ -99,24 +98,29 @@ app.post("/urls/:id/delete", (req, res) => {
 
 //cookie
 app.post("/login", (req, res) => {
-  res.cookie("username", req.body.username);
-  res.redirect('/urls');
+  const email = req.body.email;
+  const user = Object.values(users).find(user => user.email === email);
+  console.log(users);
+  if (user) {
+    res.cookie("user_id", user.id);
+    res.redirect('/urls');
+    
+  } else res.sendStatus(res.statusCode = 401);
 });
 
 //clear cookie and return to main page
 app.post("/logout", (req, res) => {
-  res.clearCookie('username');
+  res.clearCookie('user_id');
   return res.redirect('/urls');
 });
 
 //register
 app.get('/register', (req, res) => {
-  const templateVars = {
-    username: req.cookies["username"],
-  };
+  const templateVars = { user: users[req.cookies["user_id"]]};
   res.render('registerShow', templateVars);
 });
 
+//creates new user
 app.post("/register", (req, res) => {
   let id = generateRandomString();
   users[id] = {

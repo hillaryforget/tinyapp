@@ -17,19 +17,19 @@
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
-      <!-- checks for username -->
-      <% if(username){ %>
+      <!-- checks for user -->
+      <% if(user?.email){ %>
         <span class="navbar-brand" style="font-size:14px;margin-left:auto;">
-          <%= username %>
+          <%= user?.email %>
         </span>
         <form method="POST" action="/logout">
           <button class="btn btn-sm btn-outline-light" type="submit">Logout</button>
         </form>
         <% } else{ %>  
-          <!-- add username button and input to nav -->
+          <!-- add email input and login button to nav -->
           <form method="POST" action="/login" style="margin-left:auto;">
-            <input name="username" type="text" placeholder="username"/>
-            <!-- display the passed-in username -->
+            <input name="email" type="text" placeholder="email"/>
+            <!-- display the passed-in email -->
               <button type="submit" class="btn btn-sm btn-outline-light ml-md-3" >Login</button>
             </form>
             <% } %>
