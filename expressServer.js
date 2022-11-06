@@ -5,6 +5,12 @@ const cookies = require('cookie-parser');
 const app = express();//create server
 const PORT = 8080;//default port 8080
 
+const findUserByEmail = (users, email) => {
+  const user = Object.values(users).find(user => user.email === email);
+  if (!user) return null;
+  return user;
+};
+
 app.set('view engine', 'ejs');//set view engine
 app.use(morgan('dev'));
 app.use(cookies());
@@ -99,13 +105,13 @@ app.post("/urls/:id/delete", (req, res) => {
 //cookie
 app.post("/login", (req, res) => {
   const email = req.body.email;
-  const user = Object.values(users).find(user => user.email === email);
+  const user = findUserByEmail(users, email);
   console.log(users);
   if (user) {
     res.cookie("user_id", user.id);
     res.redirect('/urls');
     
-  } else res.sendStatus(res.statusCode = 401);
+  } else res.sendStatus(res.statusCode = 400);
 });
 
 //clear cookie and return to main page
@@ -122,6 +128,20 @@ app.get('/register', (req, res) => {
 
 //creates new user
 app.post("/register", (req, res) => {
+  const {
+    email,
+    password
+  } = req.body;
+
+  //check for empty inputs
+  if (typeof email !== "string" || email.length === 0) res.sendStatus(res.statusCode = 400);
+  if (typeof password !== "string" || password.length === 0) res.sendStatus(res.statusCode = 400);
+
+  //check if user exists already (by email address)
+  const user = findUserByEmail(users, email);
+  if (user) res.sendStatus(res.statusCode = 400);
+
+  //register new user
   let id = generateRandomString();
   users[id] = {
     id,
