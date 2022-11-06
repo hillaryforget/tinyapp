@@ -92,7 +92,7 @@ app.get('/urls/:id', (req, res) => {
   res.render('urlsShow', templateVars);
 });
 
-//here
+//login page
 app.get("/login", (req, res) => {
   const userID = req.session && req.session.user_id;
   const templateVars = {
