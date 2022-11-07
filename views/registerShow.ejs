@@ -15,28 +15,20 @@
       crossorigin="anonymous"
     />
 
-    <title>New URL - TinyApp Example</title>
+    <title>Register</title>
+    <%- include('partials/_header') %>
   </head>
   <body>
-    <%- include('partials/_header') %>
-    <!-- code to set up input/button to create TinyURL -->
     <main style="margin: 1em;">
-      <h3>Create TinyURL</h3>
-      <form class="form-inline" action="/urls" method="POST">
-        <div class="form-group mb-2">
-          <label for="longURL">Enter a URL:</label>
-          <input
-            class="form-control"
-            type="text"
-            name="longURL"
-            placeholder="http://"
-            style="width: 300px; margin: 1em"
-          />
-          <button type="submit" class="btn btn-primary">Submit</button>
-        </div>
+      <h3>Create new account</h3> 
+      <!-- create input for email and password on registration page -->
+      <form class="form-inline my-2 my-lg-0" method="POST" action="/register">
+        <input class="form-control mr-sm-2" type="email" name="email" placeholder="Email">
+        <input class="form-control mr-sm-2" type="password" name="password" placeholder="Password">
+        <button class="btn btn-outline-primary my-2 mr-sm-2" type="submit">Create account</button>
       </form>
     </main>
-    
+
     <!-- Bootstrap JS -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -55,4 +47,3 @@
     ></script>
   </body>
 </html>
-
