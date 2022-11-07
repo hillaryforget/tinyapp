@@ -59,6 +59,12 @@ app.use(express.urlencoded({ extended: true }));
 app.post("/urls", (req, res) => {
   let id = generateRandomString();
   urlDatabase[id] = req.body.longURL;
+  const userID = req.cookies && req.cookies.user_id;
+  const templateVars = { user: users[userID]};
+  if (!userID) {
+    templateVars.errMessage = "Must be logged in";
+    return res.render("urlsLogin", templateVars);
+  }
   res.redirect(`/urls`);
 });
 
@@ -117,9 +123,8 @@ app.get("/login", (req, res) => {
     user: users[userID] || null,
   };
   if (userID) {
-    res.redirect("/urls");
+    return res.redirect("/urls");
   }
-  console.log(users);
   res.render("urlsLogin", templateVars);
 });
 
@@ -174,6 +179,10 @@ app.post("/logout", (req, res) => {
 //register
 app.get("/register", (req, res) => {
   const templateVars = { user: users[req.cookies["user_id"]] };
+  const userID = req.cookies && req.cookies.user_id;
+  if (userID) {
+    return res.redirect("/urls");
+  }
   res.render("registerShow", templateVars);
 });
 
