@@ -71,6 +71,15 @@ app.post("/urls", (req, res) => {
 app.get("/u/:id", (req, res) => {
   const id = req.params.id;
   const longURL = urlDatabase[id];
+  const templateVars = {
+    id: req.params.id,
+    longURL: urlDatabase[req.params.id],
+    user: users[id],
+  };
+  if (!longURL) {
+    templateVars.errMessage = "404 URL not found";
+    return res.render("urlsLogin", templateVars);
+  }
   res.redirect(longURL);
 });
 
@@ -208,6 +217,6 @@ app.post("/register", (req, res) => {
     password: req.body.password,
   };
   res.cookie("user_id", id);
-  console.log(users);
+  //console.log(users);
   res.redirect(`/urls`);
 });
