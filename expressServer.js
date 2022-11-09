@@ -22,9 +22,16 @@ app.set("view engine", "ejs"); //set view engine
 app.use(morgan("dev"));
 app.use(cookies());
 
+//track which URLs belong to particular users, we'll need to associate each new URL with the user that created it.
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com",
+  "b2xVn2": {
+    longURL: "http://www.lighthouselabs.ca",
+    userID: "userRandomID",
+  },
+  "9sm5xK": {
+    longURL: "http://www.google.com",
+    userID: "userRandomID",
+  },
 };
 
 //will create a 6 char id for short url
@@ -58,8 +65,9 @@ app.use(express.urlencoded({ extended: true }));
 //add routes
 app.post("/urls", (req, res) => {
   let id = generateRandomString();
-  urlDatabase[id] = req.body.longURL;
+  //urlDatabase[id] = req.body.longURL;
   const userID = req.cookies && req.cookies.user_id;
+  urlDatabase[id] = {longURL: req.body.longURL, UserID: userID};
   const templateVars = { user: users[userID]};
   if (!userID) {
     templateVars.errMessage = "Must be logged in";
@@ -70,10 +78,10 @@ app.post("/urls", (req, res) => {
 
 app.get("/u/:id", (req, res) => {
   const id = req.params.id;
-  const longURL = urlDatabase[id];
+  const longURL = urlDatabase[id].longURL;
   const templateVars = {
     id: req.params.id,
-    longURL: urlDatabase[req.params.id],
+    longURL: urlDatabase[req.params.id].longURL,
     user: users[id],
   };
   if (!longURL) {
@@ -119,7 +127,7 @@ app.get("/urls/:id", (req, res) => {
   const userID = req.cookies && req.cookies.user_id;
   const templateVars = {
     id: req.params.id,
-    longURL: urlDatabase[req.params.id],
+    longURL: urlDatabase[req.params.id].longURL,
     user: users[userID],
   };
   res.render("urlsShow", templateVars);
@@ -138,7 +146,7 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/urls/:id/update", (req, res) => {
-  urlDatabase[req.params.id] = req.body.longURL;
+  urlDatabase[req.params.id] = {longURL: req.body.longURL, UserID: urlDatabase[req.params.id].UserID};
   res.redirect("/urls");
 });
 
