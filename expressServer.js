@@ -1,8 +1,8 @@
-const { name } = require("ejs");
+const { name } = require("ejs");//whats name doing, do i need this?
 const express = require("express");
 const morgan = require("morgan");
 const bcrypt = require("bcryptjs");
-const cookieSession = require('cookie-session');
+const cookieSession = require('cookie-session');//use instead of cookie-parser or both?
 const cookies = require("cookie-parser");
 const app = express(); //create server
 const PORT = 8080; //default port 8080
@@ -28,10 +28,11 @@ const urlsForUser = (id, database) => {
   }
   return urls;
 };
+
 //here
 app.set("view engine", "ejs"); //set view engine
 app.use(morgan("dev"));
-app.use(cookies());
+app.use(cookies());//add sessions?
 
 //track which URLs belong to particular users, we'll need to associate each new URL with the user that created it.
 const urlDatabase = {
@@ -41,7 +42,7 @@ const urlDatabase = {
   },
   "9sm5xK": {
     longURL: "http://www.google.com",
-    userID: "userRandomID",
+    userID: "user2RandomID",
   },
 };
 
@@ -61,12 +62,12 @@ const users = {
   userRandomID: {
     id: "userRandomID",
     email: "user@example.com",
-    password: "purple-monkey-dinosaur",
+    password: "123",
   },
   user2RandomID: {
     id: "user2RandomID",
     email: "user2@example.com",
-    password: "dishwasher-funk",
+    password: "123",
   },
 };
 
@@ -76,12 +77,12 @@ app.use(express.urlencoded({ extended: true }));
 //add routes
 app.post("/urls", (req, res) => {
   let id = generateRandomString();
-  //urlDatabase[id] = req.body.longURL;
+  urlDatabase[id] = req.body.longURL;
   const userID = req.cookies && req.cookies.user_id;
   urlDatabase[id] = {longURL: req.body.longURL, UserID: userID};
   const templateVars = { user: users[userID]};
   if (!userID) {
-    templateVars.errMessage = "Must be logged in";
+    templateVars.errMessage = "Must be logged in";//is working?
     return res.render("urlsLogin", templateVars);
   }
   res.redirect(`/urls`);
@@ -96,7 +97,7 @@ app.get("/u/:id", (req, res) => {
     user: users[id],
   };
   if (!longURL) {
-    templateVars.errMessage = "404 URL not found";
+    templateVars.errMessage = "404 URL not found"; //is working?
     return res.render("urlsLogin", templateVars);
   }
   res.redirect(longURL);
@@ -116,12 +117,10 @@ app.get("/urls", (req, res) => {
   const templateVars = {
     urls: urlDatabase,
     user: users[userID],
-    errMessage: "" //here
+    errMessage: ""
   };
-  //here
   if (!userID) {
     templateVars.errMessage = "Please Login";
-    //here
   }
   res.render("urlsIndex", templateVars);
 });
@@ -138,7 +137,7 @@ app.get("/urls/new", (req, res) => {
     errMessage: "",
   };
   if (!userID) {
-    templateVars.errMessage = "Login to create new URL";
+    templateVars.errMessage = "Login to create new URL";//is working?
   }
   if (userID) {
     //here
@@ -147,10 +146,23 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  const userID = req.cookies && req.cookies.user_id;
+  const userID = req.cookies.user_id;
+  if (!userID) {
+    return res.send("You are not logged in");
+  }
+  
+  const urlObj = urlDatabase[req.params.id];
+  if (!urlObj) {
+    return res.send("You do not own this URL");
+  }
+
+  if (urlObj.userID !== userID) {
+    return res.send("Permission denied");
+  }
+
   const templateVars = {
     id: req.params.id,
-    longURL: urlDatabase[req.params.id].longURL,
+    longURL: urlObj.longURL,
     user: users[userID],
   };
   res.render("urlsShow", templateVars);
@@ -248,7 +260,6 @@ app.post("/register", (req, res) => {
     password: req.body.password,
   };
   res.cookie("user_id", id);
-  //console.log(users);
   res.redirect(`/urls`);
 });
 
