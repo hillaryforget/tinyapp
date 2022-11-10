@@ -17,7 +17,18 @@ const checkPassword = (users, email, password) => {
   if (!user) return false;
   return user.password === password;
 };
-
+//here
+//returns the URLs where the userID is equal to the id of the currently logged-in user
+const urlsForUser = (id, database) => {
+  let urls = {};
+  for (let keys in database) {
+    if (database[keys].userID === id) {
+      urls[keys] = {longURL: database[keys].longURL};
+    }
+  }
+  return urls;
+};
+//here
 app.set("view engine", "ejs"); //set view engine
 app.use(morgan("dev"));
 app.use(cookies());
@@ -95,10 +106,6 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
-});
-
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
@@ -109,7 +116,13 @@ app.get("/urls", (req, res) => {
   const templateVars = {
     urls: urlDatabase,
     user: users[userID],
+    errMessage: "" //here
   };
+  //here
+  if (!userID) {
+    templateVars.errMessage = "Please Login";
+    //here
+  }
   res.render("urlsIndex", templateVars);
 });
 
@@ -119,8 +132,18 @@ app.get("/hello", (req, res) => {
 
 app.get("/urls/new", (req, res) => {
   const userID = req.cookies && req.cookies.user_id;
-  const templateVars = { user: users[userID] };
-  res.render("urlsNew", templateVars);
+  const templateVars = {
+    user: users[userID],
+    //here
+    errMessage: "",
+  };
+  if (!userID) {
+    templateVars.errMessage = "Login to create new URL";
+  }
+  if (userID) {
+    //here
+    res.render("urlsNew", templateVars);
+  }
 });
 
 app.get("/urls/:id", (req, res) => {
@@ -206,17 +229,17 @@ app.get("/register", (req, res) => {
 //creates new user
 app.post("/register", (req, res) => {
   const { email, password } = req.body;
-
+  
   //check for empty inputs
   if (typeof email !== "string" || email.length === 0)
     res.sendStatus((res.statusCode = 400));
   if (typeof password !== "string" || password.length === 0)
     res.sendStatus((res.statusCode = 400));
-
+  
   //check if user exists already (by email address)
   const user = findUserByEmail(users, email);
   if (user) res.sendStatus((res.statusCode = 400));
-
+  
   //register new user
   let id = generateRandomString();
   users[id] = {
@@ -227,4 +250,8 @@ app.post("/register", (req, res) => {
   res.cookie("user_id", id);
   //console.log(users);
   res.redirect(`/urls`);
+});
+
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`);
 });
