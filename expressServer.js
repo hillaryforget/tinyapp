@@ -1,4 +1,4 @@
-const { name } = require("ejs");//whats name doing, do i need this?
+//const { name } = require("ejs");//whats name doing, do i need this?
 const express = require("express");
 const morgan = require("morgan");
 const bcrypt = require("bcryptjs");
@@ -29,7 +29,6 @@ const urlsForUser = (id, database) => {
   return urls;
 };
 
-//here
 app.set("view engine", "ejs"); //set view engine
 app.use(morgan("dev"));
 app.use(cookies());//add sessions?
@@ -79,12 +78,14 @@ app.post("/urls", (req, res) => {
   let id = generateRandomString();
   urlDatabase[id] = req.body.longURL;
   const userID = req.cookies && req.cookies.user_id;
-  urlDatabase[id] = {longURL: req.body.longURL, UserID: userID};
+  console.log(userID);
+  urlDatabase[id] = {longURL: req.body.longURL, userID: userID};
   const templateVars = { user: users[userID]};
   if (!userID) {
     templateVars.errMessage = "Must be logged in";//is working?
     return res.render("urlsLogin", templateVars);
   }
+  console.log(urlDatabase);
   res.redirect(`/urls`);
 });
 
@@ -197,7 +198,6 @@ app.post("/login", (req, res) => {
   const user = findUserByEmail(users, email);
   const userID = req.cookies && req.cookies.user_id;
   const templateVars = { user: users[userID] };
-  console.log(users);
   //email and password don't match 403
   if (!email || !password) {
     templateVars.errMessage = "Email and password are required";
