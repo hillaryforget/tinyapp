@@ -200,11 +200,6 @@ app.post("/urls/:id/delete", (req, res) => {
   }
   
   delete urlDatabase[req.params.id];
-  // const templateVars = {
-  //   id: req.params.id,
-  //   longURL: urlObj.longURL,
-  //   user: users[userID],
-  // };
   res.redirect("/urls");
 });
 
@@ -227,7 +222,7 @@ app.post("/login", (req, res) => {
   }
   //user found and compare password
   if (user) {
-    if (bcrypt.compareSync(req.body.password, user.password)) { //how do I know its working?
+    if (bcrypt.compareSync(req.body.password, user.password)) {
     //if (checkPassword(users, email, password)) {
       res.cookie('user_id', user.id);
       res.redirect("urls");
@@ -272,7 +267,7 @@ app.post("/register", (req, res) => {
   
   //register new user
   let id = generateRandomString();
-  const hashedPassword = bcrypt.hashSync(password, 10); //how do I know if its working?
+  const hashedPassword = bcrypt.hashSync(password, 10);
   console.log(hashedPassword);
   users[id] = {
     id,
