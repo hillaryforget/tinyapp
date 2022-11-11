@@ -17,7 +17,7 @@ const checkPassword = (users, email, password) => {
   if (!user) return false;
   return user.password === password;
 };
-//here
+
 //returns the URLs where the userID is equal to the id of the currently logged-in user
 const urlsForUser = (id, database) => {
   let urls = {};
@@ -134,14 +134,12 @@ app.get("/urls/new", (req, res) => {
   const userID = req.cookies && req.cookies.user_id;
   const templateVars = {
     user: users[userID],
-    //here
     errMessage: "",
   };
   if (!userID) {
     templateVars.errMessage = "Login to create new URL";//is working?
   }
   if (userID) {
-    //here
     res.render("urlsNew", templateVars);
   }
 });
@@ -153,8 +151,8 @@ app.get("/urls/:id", (req, res) => {
   }
   
   const urlObj = urlDatabase[req.params.id];
-  if (!urlObj) {
-    return res.send("You do not own this URL");
+  if (!req.params.id) {
+    return res.send("Must provide more information");
   }
 
   if (urlObj.userID !== userID) {
@@ -187,8 +185,27 @@ app.post("/urls/:id/update", (req, res) => {
 });
 
 app.post("/urls/:id/delete", (req, res) => {
+  const userID = req.cookies.user_id;
+  if (!userID) {
+    return res.send("You are not logged in");
+  }
+  
+  const urlObj = urlDatabase[req.params.id];
+  if (!req.params.id) {
+    return res.send("Must provide more information");
+  }
+  
+  if (urlObj.userID !== userID) {
+    return res.send("Permission denied");
+  }
+  
   delete urlDatabase[req.params.id];
-  return res.redirect("/urls");
+  // const templateVars = {
+  //   id: req.params.id,
+  //   longURL: urlObj.longURL,
+  //   user: users[userID],
+  // };
+  res.redirect("/urls");
 });
 
 //login cookie
