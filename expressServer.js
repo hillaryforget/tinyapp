@@ -227,7 +227,8 @@ app.post("/login", (req, res) => {
   }
   //user found and compare password
   if (user) {
-    if (checkPassword(users, email, password)) {
+    if (bcrypt.compareSync(req.body.password, user.password)) { //how do I know its working?
+    //if (checkPassword(users, email, password)) {
       res.cookie('user_id', user.id);
       res.redirect("urls");
     }
@@ -271,10 +272,12 @@ app.post("/register", (req, res) => {
   
   //register new user
   let id = generateRandomString();
+  const hashedPassword = bcrypt.hashSync(password, 10); //how do I know if its working?
+  console.log(hashedPassword);
   users[id] = {
     id,
     email: req.body.email,
-    password: req.body.password,
+    password: hashedPassword
   };
   res.cookie("user_id", id);
   res.redirect(`/urls`);
