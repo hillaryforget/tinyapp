@@ -21,14 +21,12 @@
     <%- include('partials/_header') %>
     <main style="margin: 1em;">
       <h3>My URLs</h3>
-      <!-- here -->
   <% if (errMessage) { %>
     <div class="alert alert-warning">
       <%- errMessage %>
     </div>
   <% } %>
   <% if (user) { %>
-    <!-- here -->
       <table class="table table-responsive-sm">
         <thead>
           <tr>
@@ -59,13 +57,11 @@
           <% } %>
         </tbody>
       </table>
-<!-- here -->
     <div>
-      <a href="/urls/new" class="btn btn-primary">+New Tiny URL</a>
+      <a href="/urls/new" class="btn btn-primary">Create a New Short Link</a>
     </div>
   </div>
   <% } %>
-  <!-- here -->
     </main>
 
     <!-- Bootstrap JS -->
