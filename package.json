@@ -4,7 +4,8 @@
   "description": "W6 Project",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha"
+    "start": "nodemon -L expressServer.js",
+    "test": "./node_modules/mocha/bin/_mocha"
   },
   "repository": {
     "type": "git",
