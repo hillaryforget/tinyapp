@@ -1,31 +1,10 @@
 const express = require("express");
+const helpers = require("./helpers");
 const morgan = require("morgan");
 const bcrypt = require("bcryptjs");
 const cookieSession = require("cookie-session");
 const app = express(); //create server
 const PORT = 8080; //default port 8080
-
-const findUserByEmail = (users, email) => {
-  const user = Object.values(users).find((user) => user.email === email);
-  if (!user) return null;
-  return user;
-};
-const checkPassword = (users, email, password) => {
-  const user = Object.values(users).find((user) => user.email === email);
-  if (!user) return false;
-  return user.password === password;
-};
-
-//returns the URLs where the userID is equal to the id of the currently logged-in user
-const urlsForUser = (id, database) => {
-  let urls = {};
-  for (let keys in database) {
-    if (database[keys].userID === id) {
-      urls[keys] = { longURL: database[keys].longURL };
-    }
-  }
-  return urls;
-};
 
 app.set("view engine", "ejs"); //set view engine
 app.use(morgan("dev"));
@@ -40,17 +19,6 @@ const urlDatabase = {
     longURL: "http://www.google.com",
     userID: "user2RandomID",
   },
-};
-
-//will create a 6 char id for short url
-const generateRandomString = () => {
-  const characters = "1234567890abcdefghijklmnopqrstuvwxyz";
-  const charsLength = characters.length;
-  let output = "";
-  for (let i = 0; i < 6; i++) {
-    output += characters.charAt(Math.floor(Math.random() * charsLength));
-  }
-  return output;
 };
 
 //global object used to store and access the users in the app
@@ -80,7 +48,7 @@ app.use(
 
 //add routes
 app.post("/urls", (req, res) => {
-  let id = generateRandomString();
+  let id = helpers.generateRandomString();
   urlDatabase[id] = req.body.longURL;
   const userID = req.session && req.session.user_id;
   urlDatabase[id] = { longURL: req.body.longURL, userID: userID };
@@ -114,7 +82,6 @@ app.get("/urls.json", (req, res) => {
 
 app.get("/urls", (req, res) => {
   const userID = req.session && req.session.user_id;
-  console.log(req.session);
   const templateVars = {
     urls: urlDatabase,
     user: users[userID],
@@ -219,7 +186,7 @@ app.post("/urls/:id/delete", (req, res) => {
 app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  const user = findUserByEmail(users, email);
+  const user = helpers.findUserByEmail(email, users);
   const userID = req.session.user_id;
   const templateVars = { user: users[userID] };
 
@@ -279,12 +246,12 @@ app.post("/register", (req, res) => {
     return;
   }
   //check if user exists already (by email address)
-  const user = findUserByEmail(users, email);
+  const user = helpers.findUserByEmail(users, email);
   if (user) {
     res.status(400).send("User already exists");
   }
   //register new user
-  let id = generateRandomString();
+  let id = helpers.generateRandomString();
   const hashedPassword = bcrypt.hashSync(password, 10);
   console.log(hashedPassword);
   users[id] = {
