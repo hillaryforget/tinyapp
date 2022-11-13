@@ -20,22 +20,22 @@ const generateRandomString = () => {
 };
 //DO I EVEN NEED THESE????????????????????????
 //checks if passwords match
-const checkPassword = (users, email, password) => {
-  const user = Object.values(users).find((user) => user.email === email);
-  if (!user) return false;
-  return user.password === password;
-};
+// const checkPassword = (users, email, password) => {
+//   const user = Object.values(users).find((user) => user.email === email);
+//   if (!user) return false;
+//   return user.password === password;
+// };
 
-//returns the URLs where the userID is equal to the id of the currently logged-in user
-const urlsForUser = (id, database) => {
-  let urls = {};
-  for (let keys in database) {
-    if (database[keys].userID === id) {
-      urls[keys] = { longURL: database[keys].longURL };
-    }
-  }
-  return urls;
-};
+// //returns the URLs where the userID is equal to the id of the currently logged-in user
+// const urlsForUser = (id, database) => {
+//   let urls = {};
+//   for (let keys in database) {
+//     if (database[keys].userID === id) {
+//       urls[keys] = { longURL: database[keys].longURL };
+//     }
+//   }
+//   return urls;
+// };
 
 module.exports = {
   generateRandomString,
