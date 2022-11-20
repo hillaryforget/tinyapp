@@ -8,10 +8,10 @@ TinyApp is a full stack web application built with Node and Express that allows 
 Login Page
 
 !["Tinyapp Main Page"](docs/TinyAppMainPage.png)
-
+Main Page
 
 !["Tinyapp Update Page"](docs/TinyAppUpdatePage.png)
-
+Update Page
 ## Dependencies
 
 - Node.js
@@ -26,3 +26,6 @@ Login Page
 - Install all dependencies (using the `npm install` command).
 - Run the development web server using the `node expressServer.js` command.
 - Go to the app in the browser at http://localhost:8080
+
+## Test
+- Run npm test to test helper function
